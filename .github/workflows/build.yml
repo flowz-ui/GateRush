@@ -20,6 +20,14 @@ jobs:
         with:
           gradle-version: 8.9
 
+      - name: Tatli fontu indir (olmazsa varsayilan font kullanilir)
+        run: |
+          mkdir -p app/src/main/assets/fonts
+          curl -fsSL -o app/src/main/assets/fonts/LilitaOne-Regular.ttf \
+            "https://github.com/google/fonts/raw/main/ofl/lilitaone/LilitaOne-Regular.ttf" \
+            || echo "Font indirilemedi, varsayilan font kullanilacak"
+          ls -la app/src/main/assets/fonts
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 

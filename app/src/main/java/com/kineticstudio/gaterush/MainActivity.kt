@@ -1,81 +1,65 @@
 package com.kineticstudio.gaterush
 
+import android.app.Activity
+import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import kotlin.math.abs
+import android.widget.FrameLayout
 
-class MainActivity : ComponentActivity() {
+class MainActivity : Activity() {
+
+    private lateinit var glView: GLSurfaceView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.hide(WindowInsetsCompat.Type.systemBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        setContent { GameScreen() }
-    }
-}
+        Fonts.init(this)
 
-@Composable
-fun GameScreen() {
-    val ctx = LocalContext.current
-    val game = remember { Game(ctx.applicationContext) }
-    var frame by remember { mutableLongStateOf(0L) }
+        val game = Game(applicationContext)
 
-    LaunchedEffect(Unit) {
-        var last = 0L
-        while (true) {
-            androidx.compose.runtime.withFrameNanos { now ->
-                val dt = if (last == 0L) 0.016f else (now - last) / 1_000_000_000f
-                last = now
-                game.update(dt)
-                frame = now
-            }
+        glView = GLSurfaceView(this).apply {
+            setEGLContextClientVersion(2)
+            setEGLConfigChooser(8, 8, 8, 8, 24, 0)
+            setRenderer(GameRenderer(game))
+            renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         }
+        val hud = HudView(this, game)
+
+        val root = FrameLayout(this)
+        val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        root.addView(glView, lp)
+        root.addView(hud, lp)
+        setContentView(root)
+        hideSystemUi()
     }
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                awaitEachGesture {
-                    val down = awaitFirstDown()
-                    var last = down.position
-                    var moved = 0f
-                    while (true) {
-                        val ev = awaitPointerEvent()
-                        val c = ev.changes.firstOrNull() ?: break
-                        if (!c.pressed) break
-                        val d = c.position - last
-                        last = c.position
-                        moved += abs(d.x) + abs(d.y)
-                        if (d.x != 0f) game.onDrag(d.x)
-                        c.consume()
-                    }
-                    if (moved < 24f) game.onTap(last)
-                }
-            }
-    ) {
-        val f = frame // sadece okuma: her karede yeniden çizimi tetikler
-        if (f >= 0L) game.draw(this)
+    @Suppress("DEPRECATION")
+    private fun hideSystemUi() {
+        window.decorView.systemUiVisibility = (
+            View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        glView.onResume()
+        hideSystemUi()
+    }
+
+    override fun onPause() {
+        glView.onPause()
+        super.onPause()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemUi()
     }
 }
