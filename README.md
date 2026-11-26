@@ -1,21 +1,9 @@
-# GateRush
+# FLEX RUSH — Kinetic Studio
 
-Pushed to GitHub with Pack2Git.
+Kas yaparak koşan 3D kapı-koşusu oyunu. Deniz manzaralı, kaslanan karakter, para, şapka/beden dolabı, mağaza, günlük hediye, final "yüksek vurucu".
 
-## Project structure
-
-- `.github`
-- `app`
-
-9 files were committed in the first push.
-
-## Getting started
-
-```bash
-git clone <this-repo-url>
-cd GateRush
-```
-
-## Licence
-
-Released under the MIT licence — see `LICENSE`.
+- Motor: HTML5 + özel WebGL motoru (`app/src/main/assets/www`), Android'de WebView içinde çalışır.
+- Derleme: GitHub Actions (`.github/workflows/build.yml`) → Actions sekmesinden `GateRush-debug-apk` indir.
+- Oyun adı `js/data.js` içindeki `GAME_NAME` ve `AndroidManifest.xml` label alanından değişir.
+- Satın alma butonları şimdilik arayüzdür (ödeme yok); reklamlar demo.
+- Ayarlar > sürüm yazısına 7 kez dokun = geliştirici hilesi (+100000 para).

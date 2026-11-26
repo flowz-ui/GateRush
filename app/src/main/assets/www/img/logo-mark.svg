@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#2B3FA8"/><stop offset="0.55" stop-color="#16206B"/><stop offset="1" stop-color="#0A1040"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4FF8A"/><stop offset="0.5" stop-color="#C6FF3D"/><stop offset="1" stop-color="#7DDB00"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8FF8F"/><stop offset="0.5" stop-color="#35E0FF"/><stop offset="1" stop-color="#C6FF3D"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.6">
+      <stop offset="0" stop-color="#5E7BFF" stop-opacity="0.55"/><stop offset="1" stop-color="#5E7BFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="8" y="8" width="184" height="184" rx="50" fill="url(#bg)"/>
+  <rect x="8" y="8" width="184" height="184" rx="50" fill="url(#glow)"/>
+  <rect x="11" y="11" width="178" height="178" rx="47" fill="none" stroke="url(#rim)" stroke-width="5"/>
+  <path d="M30 70 Q60 22 120 22" fill="none" stroke="#fff" stroke-opacity="0.14" stroke-width="10" stroke-linecap="round"/>
+  <g transform="translate(100 100) skewX(-8) translate(-100 -100)">
+    <g fill="#000" opacity="0.28" transform="translate(5 8)">
+      <path d="M50 42 H80 V158 H50 Z"/>
+      <path d="M80 106 L128 42 H166 L108 114 Z"/>
+      <path d="M100 108 L172 158 H132 L88 128 Z"/>
+    </g>
+    <g fill="url(#lime)" stroke="#F4FF8A" stroke-width="3" stroke-linejoin="round">
+      <path d="M50 42 H80 V158 H50 Z"/>
+      <path d="M80 106 L128 42 H166 L108 114 Z"/>
+      <path d="M100 108 L172 158 H132 L88 128 Z"/>
+    </g>
+    <path d="M56 48 H66 V150 H56 Z" fill="#fff" opacity="0.35"/>
+  </g>
+  <g fill="#fff" opacity="0.9">
+    <path d="M160 30 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z"/>
+  </g>
+</svg>

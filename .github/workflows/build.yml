@@ -1,4 +1,4 @@
-name: Build APK
+name: Build Flex Rush APK
 
 on:
   push:
@@ -20,18 +20,11 @@ jobs:
         with:
           gradle-version: 8.9
 
-      - name: Tatli fontu indir (olmazsa varsayilan font kullanilir)
-        run: |
-          mkdir -p app/src/main/assets/fonts
-          curl -fsSL -o app/src/main/assets/fonts/LilitaOne-Regular.ttf \
-            "https://github.com/google/fonts/raw/main/ofl/lilitaone/LilitaOne-Regular.ttf" \
-            || echo "Font indirilemedi, varsayilan font kullanilacak"
-          ls -la app/src/main/assets/fonts
-
       - name: Build debug APK
-        run: gradle :app:assembleDebug --no-daemon --stacktrace
+        run: gradle :app:assembleDebug --no-daemon
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: GateRush-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
